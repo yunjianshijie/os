@@ -1,0 +1,16 @@
+memory: host=32, guest=32
+
+romimage: file=/usr/share/bochs/BIOS-bochs-latest
+vgaromimage: file=/usr/share/bochs/VGABIOS-lgpl-latest
+
+boot: disk 
+
+log: bochs.out 
+
+mouse: enabled=0 
+keyboard:keymap=/usr/share/bochs/keymaps/x11-pc-us.map 
+
+ata0: enabled=1, ioaddr1=0x1f0, ioaddr2=0x3f0, irq=14 
+# path要改为虚拟硬盘的绝对路径
+ata0-master: type=disk, path="/home/yunjian/os/HD60.img", mode=flat
+

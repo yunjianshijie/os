@@ -1,0 +1,4 @@
+*.img
+./build/
+.vscode/
+tast/
