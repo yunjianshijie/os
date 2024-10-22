@@ -32,8 +32,8 @@
          mov cx,1 ;把cx寄存器存储1
      @f:
          add ax,cx ;传给ax
-         inc cx ;inc是啥
-         cmp cx,100 ;cmp有是啥
+         inc cx ;inc cx累加1
+         cmp cx,100 ;cmp又是啥，让cx和100对比
          jle @f
 
          ;以下计算累加和的每个数位 
@@ -44,12 +44,12 @@
          mov bx,10
          xor cx,cx
      @d:
-         inc cx
-         xor dx,dx
-         div bx
+         inc cx ;记住位数
+         xor dx,dx ;清零dx
+         div bx ;除以bx放ah里面al放这个数，ax放余数
          or dl,0x30
          push dx
-         cmp ax,0
+         cmp ax,0 ;ax
          jne @d
 
          ;以下显示各个数位 
