@@ -3,16 +3,13 @@
          ;文件说明：硬盘主引导扇区代码
          ;创建日期：2011-4-13 18:02
          
-         jmp near start
+         jmp near start ;是为了跳过没有指令的数据区
 	
  message db '1+2+3+...+100='
-
-
 
  start:
          mov ax,0x7c0           ;设置数据段的段基地址 
          mov ds,ax    ;将数据段寄存器设置成0x7c0
-
 
          mov ax,0xb800          ;设置附加段基址到显示缓冲区
          mov es,ax    ;将附加段设置成0xb800,显存的地址？
