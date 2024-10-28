@@ -31,7 +31,7 @@ new_int_0x70:
       push dx
       push es
       
-  .w0:                                    
+  .w0:                                     
       mov al,0x0a                        ;阻断NMI。当然，通常是不必要的
       or al,0x80                          
       out 0x70,al
