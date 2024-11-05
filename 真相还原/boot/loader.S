@@ -32,7 +32,32 @@
 %include "boot.inc"
 section loader vstart=LOADER_BASE_ADDR
 LOADER_STACK_TOP equ LOADER_BASE_ADDR
-    jmp loader_start;loader一进来是一大堆GDT段描述符数据，无法执行，所以要跳过
+; ;输出背景绿色，前景色红色，并且跳动的字符串‘1 MBR’
+; mov byte [gs:0x00],'2'
+; mov byte [gs:0x01],0xA4 ;A表示绿色背景闪烁，4表示前景色为红色
+
+; mov byte [gs:0x02],' '
+; mov byte [gs:0x03],0xA4
+
+; mov byte [gs:0x04],'L'
+; mov byte [gs:0x05],0xA4
+
+; mov byte [gs:0x06],'O' 
+; mov byte [gs:0x07],0xA4
+
+; mov byte [gs:0x08],'A' 
+; mov byte [gs:0x09],0xA4 
+
+; mov byte [gs:0x0a],'D' 
+; mov byte [gs:0x0b],0xA4
+
+; mov byte [gs:0x0c],'E'
+; mov byte [gs:0x0d],0xA4
+
+; mov byte [gs:0x0e],'R' 
+; mov byte [gs:0x0f],0xA4
+
+jmp loader_start;loader一进来是一大堆GDT段描述符数据，无法执行，所以要跳过
 
 GDT_BASE:                                               ;构建gdt及其内部的描述符
     dd 0x00000000
@@ -78,6 +103,7 @@ loader_start:
 ;   2——字符串中含显示字符和显示属性。显示后，光标位置不变
 ;   3——字符串中含显示字符和显示属性。显示后，光标位置改变
 ;无返回值
+
     mov sp,LOADER_BASE_ADDR
     mov	bp,loadermsg                                    ; ES:BP = 字符串地址
     mov	cx,17			                                ; CX = 字符串长度
@@ -85,7 +111,7 @@ loader_start:
     mov	bx,0x001f		                                ; 页号为0(BH = 0) 蓝底粉红字(BL = 1fh)
     mov	dx,0x1800		                                ;
     int	0x10                                            ; 10h 号中断
-
+    
 ;-----------------   准备进入保护模式   ------------------------------------------
 ;1 打开A20
 ;2 加载gdt
@@ -105,10 +131,10 @@ loader_start:
     or eax,0x00000001
     mov cr0,eax
 
-;jmp dword SELECTOR_CODE:p_mode_start
-    jmp  SELECTOR_CODE:p_mode_start	                    ; 刷新流水线，避免分支预测的影响,这种cpu优化策略，最怕jmp跳转，
-					                                    ; 这将导致之前做的预测失效，从而起到了刷新的作用。
 
+;jmp dword SELECTOR_CODE:p_mode_start
+    jmp  dword  SELECTOR_CODE:p_mode_start	                    ; 刷新流水线，避免分支预测的影响,这种cpu优化策略，最怕jmp跳转，
+					                                    ; 这将导致之前做的预测失效，从而起到了刷新的作用
 [bits 32]
 p_mode_start:
     mov ax,SELECTOR_DATA
@@ -119,6 +145,6 @@ p_mode_start:
     mov ax,SELECTOR_VIDEO
     mov gs,ax
 
-    mov byte [gs:160], 'P'
+    mov byte [gs:160], 'P' ;第二排（一排80,一个字两个字节）
 
     jmp $
