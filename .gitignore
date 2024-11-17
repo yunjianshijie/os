@@ -3,3 +3,4 @@
 .vscode/
 tast/
 ./真相还原/build/
+*build/
