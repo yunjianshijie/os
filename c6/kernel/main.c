@@ -17,7 +17,10 @@ void main(void) {
   put_char('2');
   put_char('\b');
   put_char('4');
-  
+  put_char('\n');
+  put_int(9);
+  put_int(0x12345678);
+  put_char('\n');
   while (1)
     ;
   }

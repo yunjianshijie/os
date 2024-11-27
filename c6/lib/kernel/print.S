@@ -237,5 +237,23 @@ put_int:
 
     je .full0
     ;找出连续的0字符，edi作为非0的最高字符
-
+.go_on_skip:
+    mov cl,[put_int_buffer+edi]
+    inc edi
+    cmp cl,'0'
+    jz .skip_prefix_0
+    dec edi ;edi指向非0字符
+    ;如果当前字符不为0,要使edi-1恢复指向当前字符
+    jmp .put_each_num
+.full0:
+    mov cl,'0'          ;输入的数字为全0时，则之打印0
+.put_each_num:
+    push ecx
+    call put_char
+    add esp,4
+    inc edi
+    mov cl,[put_int_buffer+edi] ;拿下一个
+    jl  .put_each_num
+    popad
+    ret
 
