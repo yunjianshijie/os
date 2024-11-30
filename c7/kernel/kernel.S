@@ -1,7 +1,7 @@
 [ bits 32]
 %define ERROR_CODE nop
 %define ZERO push 0
-extern pet_str; 声明外部函数
+extern put_str; 声明外部函数
 
 section .data
 intr_str db "Interrupt occur!", 0xa,0
@@ -15,7 +15,7 @@ intr%1entry:                     ;每个中断处理程序都要压入中断向�
                                 ;自己知道自己的中断向量号是多少
     %2
     push intr_str
-    call pet_str
+    call put_str
     add esp,4               ;跳过参数
 
     ;如果是从片上进入中断，除了往从片上发EOI外，还要往主片上发EOI
