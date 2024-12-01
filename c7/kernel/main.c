@@ -1,8 +1,3 @@
-// #include "print.h"
-// int main(void) {
-//   while (1)
-//     ;
-// }
 #include "print.h"
 #include "init.h"
 void main(void) {

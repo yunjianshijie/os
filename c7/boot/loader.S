@@ -258,7 +258,3 @@ rd_disk_m_32:
     add ebx,2
     loop .go_on_read
     ret
-
-
-
-    

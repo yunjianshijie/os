@@ -8,7 +8,8 @@
 #define PIC_M_DATA 0x21 // 主片的数据端口是 0x21
 #define PIC_S_CTRL 0xa0 // 从片的控制端口是 0xa0
 #define PIC_S_DATA 0xa1 // 从片的数据端口是 0xa1
-#define IDT_DESC_CNT 0x21
+
+#define IDT_DESC_CNT 0x21// 支持的中断描述符个数33
 
 /* 中断门描述符结构体*/
 struct gate_desc // 结构体中位置越偏下的成员，其地址越高。
@@ -22,6 +23,8 @@ struct gate_desc // 结构体中位置越偏下的成员，其地址越高。
   uint16_t func_offset_high_word; // 中断处理程序在目标段内的偏移量高16位
 };
 
+char *intr_name[IDT_DESC_CNT];            // 用来保存异常的名字
+intr_handler idt_table[IDT_DESC_CNT]; // 用来保存中断处理程序,在kernel.S中定义的intrXXentry
 static struct gate_desc idt[IDT_DESC_CNT]; // idt 是中断描述符表
                                            // 本质上就是个中断门描述符数组
 /*初始化可编程中断控制器*/
