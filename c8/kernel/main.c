@@ -2,9 +2,11 @@
 #include "init.h"
 #include "timer.h"
 #include "debug.h"
+#include "memory.h"
 void main(void) {
   put_str("I am kernel\n");
   init_all();
+  mem_init();
   ASSERT(1 == 2); // 测试断言
   while(1)
     ;

@@ -81,9 +81,9 @@ IMG = /home/yunjian/os/HD60.img
 
 # 目标文件
 KERNEL_OBJS = $(BUILD_DIR)/main.o $(BUILD_DIR)/init.o $(BUILD_DIR)/interrupt.o \
-              $(BUILD_DIR)/print.o $(BUILD_DIR)/kernel.o $(BUILD_DIR)/timer.o  $(BUILD_DIR)/debug.o \
-            #   $(BUILD_DIR)/debug.o $(BUILD_DIR)/memory.o $(BUILD_DIR)/bitmap.o \
-			#   $(BUILD_DIR)/string.o
+              $(BUILD_DIR)/print.o $(BUILD_DIR)/kernel.o $(BUILD_DIR)/timer.o   \
+              $(BUILD_DIR)/debug.o $(BUILD_DIR)/memory.o $(BUILD_DIR)/bitmap.o \
+			  $(BUILD_DIR)/string.o # $(BUILD_DIR)/debug.o 
 
 # 默认目标
 all: $(IMG)
@@ -108,8 +108,8 @@ $(BUILD_DIR)/%.o: $(LIB_DIR)/kernel/%.S
 $(BUILD_DIR)/%.o: $(LIB_DIR)/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-# $(BUILD_DIR)/bitmap.o: $(LIB_DIR)/kernel/bitmap.c
-# 	$(CC) $(CFLAGS) -c -o $@ $<
+$(BUILD_DIR)/bitmap.o: $(LIB_DIR)/kernel/bitmap.c
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(BUILD_DIR)/kernel.o: $(KERNEL_DIR)/kernel.S
 	$(AS) $(ASFLAGS) -o $@ $<

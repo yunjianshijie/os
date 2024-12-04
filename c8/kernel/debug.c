@@ -6,7 +6,8 @@
 
 void panic_spin(char *filename, int line, const char *func,
                 const char *condition) {
-  intr_disable(); // 先关掉中断
+  intr_disable(); // 先关掉中断 
+  // 没有明白为什么这里要关中断
   put_str("\n\n\nerror!!!!!\n");
   put_str("\n filename:");
   put_str((char *)filename);
