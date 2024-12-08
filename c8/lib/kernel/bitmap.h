@@ -1,7 +1,7 @@
 #ifndef _LIB_KERNEL_BITMAP_H
 #define _LIB_KERNEL_BITMAP_H
 #include "global.h"
-
+#include <stdbool.h>
 // 用来在位图中逐位判断,主要就是通过按位与‘&’来判断相应位是否为 1。
 #define BITMAP_MASK 1
 

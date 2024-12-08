@@ -1,8 +1,7 @@
 #include "string.h"
 #include "debug.h"
 #include "global.h"
-
-#define NULL ((void *)0)
+#include "print.h"
 
 /* 将 dst_起始的 size 个字节置为 value */
 void memset(void *dst_, uint8_t value, uint32_t size) {
