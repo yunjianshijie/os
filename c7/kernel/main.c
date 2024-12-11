@@ -1,5 +1,6 @@
 #include "print.h"
 #include "init.h"
+#include "timer.h"
 void main(void) {
   put_str("I am kernel\n");
   init_all();

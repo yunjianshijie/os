@@ -6,3 +6,4 @@ tast/
 *build/
 *.o
 *.bin
+*.out
