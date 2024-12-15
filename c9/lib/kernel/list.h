@@ -28,7 +28,7 @@ typedef bool(function)(struct list_elem *, int arg);
 // 初始化
 void list_init(struct list *list);
 //  插入
-void list_insert_before(struct list_elem *brfore, struct list_elem *elem);
+void list_insert_before(struct list_elem *before, struct list_elem *elem);
 //
 void list_push(struct list *plist, struct list_elem *elem);
 //
@@ -36,7 +36,7 @@ void list_iterate(struct list *plist);
 //
 void list_append(struct list *plist, struct list_elem *elem);
 //
-void list_remove(struct list_elem *elem);
+void list_remove(struct list_elem *pelem);
 // 弹出
 struct list_elem *list_pop(struct list *plist);
 // 是否为空

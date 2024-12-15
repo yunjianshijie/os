@@ -133,7 +133,7 @@ sub bx ,dx      ;bx是光标位置，减去余数，就是下一行的行首
     loop .cls ; 循环 80 次
     mov bx,1920 ;将光标值重置
 
-
+global set_cursor
 .set_cursor:
     ;;;;;;;;;;;;;;设置光标位置 
     ;;;;;;;;;; 1. 高8位 

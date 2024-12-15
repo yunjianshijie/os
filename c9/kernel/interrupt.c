@@ -1,9 +1,9 @@
 #include "interrupt.h"
+#include "debug.h"
 #include "global.h"
 #include "io.h"
 #include "print.h"
 #include "stdint.h"
-#include "debug.h"
 #define PIC_M_CTRL 0x20 // 主片的控制端口是 0x20
 #define PIC_M_DATA 0x21 // 主片的数据端口是 0x21
 #define PIC_S_CTRL 0xa0 // 从片的控制端口是 0xa0
@@ -13,8 +13,11 @@
 
 #define EFLAGS_IF 0x00000200 // IF 标志位，代表中断是否被禁止
 
-#define GET_EFLAGS(EFLAG_VAR) asm volatile("pushfl\n" "popl %0" : "=g"(EFLAG_VAR)) //
-//用REFLAG_VAR来保存EFLAGS寄存器的值
+#define GET_EFLAGS(EFLAG_VAR)                                                  \
+  asm volatile("pushfl\n"                                                      \
+               "popl %0"                                                       \
+               : "=g"(EFLAG_VAR)) //
+// 用REFLAG_VAR来保存EFLAGS寄存器的值
 
 /* 中断门描述符结构体*/
 struct gate_desc // 结构体中位置越偏下的成员，其地址越高。
@@ -79,12 +82,28 @@ static void general_intr_handler(uint8_t vec_nr) {
   // 如果中断向量号是0x27 在 IRQ7和IRQ15上，会产生为中断，不需要处理（spurious
   // interrupt） 0x2f是从片8259A的最后一个IRQ引脚，保留不用
   if (vec_nr == 0x27 || vec_nr == 0x2f) {
-    return;
+    return; // IRQ7 和 IRQ15 会产生伪中断（spurious interrupt），无需处理
   }
+
+/* 将光标置为0 ，从屏幕左上角清出一片打印异常信息的区域，方便阅读*/
+  set_cursor(0); // 重置光标为屏幕左上角
+  put_str("!!!!!!! excetion message begin !!!!!!!!\n");
+  set_cursor(88); // 从第 2 行第 8 个字符开始打印
+  put_str(intr_name[vec_nr]); // 打印异常类型
+  if (vec_nr == 14) { // 若为 Pagefault，将缺失的地址打印出来并悬停
+    int page_fault_vaddr = 0;
+    asm volatile("movl %%cr2, %0" : "=r"(page_fault_vaddr));
+    put_str("\npage fault addr is ");
+    put_int(page_fault_vaddr);
+   
+  } put_str("\n!!!!!!! excetion message end !!!!!!!!\n");
+     // 能进入中断处理程序就表示已经处在关中断情况下
+     // 不会出现调度进程的情况。故下面的死循环不会再被中断
+     while (1);
   // 其他中断号
-  put_str("int vector: 0x");
-  put_int(vec_nr);
-  put_char('\n');
+  // put_str("int vector: 0x");
+  // put_int(vec_nr);
+  // put_char('\n');
 }
 
 /* 完成一般中断处理函数注册以及异常名称注册*/
@@ -165,21 +184,21 @@ enum intr_status intr_disable() {
 
 /* 将中断状态设置为status*/
 enum intr_status intr_set_status(enum intr_status status) {
-    // enum intr_status old_status;
-    // if(INTR_ON == intr_get_status()){
-    //     old_status = INTR_ON;
-    //     if(INTR_OFF == status){
-    //       asm volatile("cli" : : : "memory"); // 关中断，cli 指令将 IF 位置 0 
-    //       //  menory 是一个内存屏障，防止编译器优化
-    //     }
-    //   }
-    return status & INTR_ON ? intr_disable():intr_enable();
-    //妙啊，但是&INTR_ON 的意义在哪里？
+  // enum intr_status old_status;
+  // if(INTR_ON == intr_get_status()){
+  //     old_status = INTR_ON;
+  //     if(INTR_OFF == status){
+  //       asm volatile("cli" : : : "memory"); // 关中断，cli 指令将 IF 位置 0
+  //       //  menory 是一个内存屏障，防止编译器优化
+  //     }
+  //   }
+  return status & INTR_ON ? intr_disable() : intr_enable();
+  // 妙啊，但是&INTR_ON 的意义在哪里？
 }
 
 /*获取当前中断状态*/
 enum intr_status intr_get_status() {
-  uint32_t eflags=0;
+  uint32_t eflags = 0;
   GET_EFLAGS(eflags);
   return (EFLAGS_IF & eflags) ? INTR_ON : INTR_OFF;
 }
@@ -195,5 +214,4 @@ void idt_init(void) {
   uint64_t idt_operand = ((sizeof(idt) - 1) | ((uint64_t)(uint32_t)idt << 16));
   asm volatile("lidt %0" : : "m"(idt_operand));
   put_str("idt_init done\n");
-
 }
