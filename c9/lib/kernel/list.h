@@ -4,7 +4,7 @@
 #include "global.h"
 #include <stdbool.h>
 #define offser(struct_type, member) (int)(&((struct_type *)0)->member)
-#define element_type(struct_type, struct_member_name, elem_ptr)                \
+#define elem2entry(struct_type, struct_member_name, elem_ptr)                \
   (struct_type *)((int)elem_ptr - offser(struct_type, struct_member_name))
   
 #define NULL ((void *)0)

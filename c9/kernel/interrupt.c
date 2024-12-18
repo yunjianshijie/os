@@ -158,6 +158,14 @@ static void idt_desc_init(void) {
   put_str("  idt_desc_init done\n");
 }
 
+/* 在中断处理函数组第vector_no个元素中（vector_no 是中断向量号）
+注册安装中断处理程序function */
+void register_headler(uint8_t vector_no, intr_handler function){
+/* idt_table 数组中的函数是在进入中断后根据中断向量号调用的
+* 见kernel/kernel.s的call[idt_table + %1*4]*/
+idt_table[vector_no] = function; // idt中断描述符表中第vector_no个元素
+}
+
 /*开中断并返回开中断前的状态*/
 enum intr_status intr_enable() {
   enum intr_status old_status;
@@ -215,3 +223,5 @@ void idt_init(void) {
   asm volatile("lidt %0" : : "m"(idt_operand));
   put_str("idt_init done\n");
 }
+
+

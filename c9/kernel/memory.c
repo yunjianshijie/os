@@ -97,7 +97,9 @@ static void *palloc(struct pool *m_pool) {
   uint32_t page_phyaddr = m_pool->phy_addr_start + bit_idx * PG_SIZE;
   return (void *)page_phyaddr;
 }
+  
 
+  
 // vaddr-> 虚拟地址， page_phyaddr-> 页框物理地址
 static void page_table_add(void *_vaddr, void *_page_phyaddr) {
 
@@ -115,7 +117,6 @@ static void page_table_add(void *_vaddr, void *_page_phyaddr) {
    * 否则会引发 page_fault。因此在*pde 为 0 时，
    *pte 只能出现在下面 else 语句块中的*pde 后面。
    ************************************************************/
-
   if (*pde & 0x00000001) {
     // 页目录项和页表项的第0位为P,此处判断目录项是否存在
     ASSERT(!(*pte & 0x00000001));
@@ -142,7 +143,7 @@ static void page_table_add(void *_vaddr, void *_page_phyaddr) {
     memset((void *)((int)pte & 0xfffff000), 0, PG_SIZE);
     ASSERT(!(*pte & 0x00000001));
     *pte = (page_phyaddr | PG_US_U | PG_RW_W | PG_P_1);
-    // US=1,RW=1,P=1
+    // US=100,RW=010,P=001
   }
 }
 

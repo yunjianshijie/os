@@ -1,9 +1,10 @@
 #ifndef _THREAD_THREAD_H
 #define _THREAD_THREAD_H
-#include "stdint.h"
-#include "list.h"
-#include "interrupt.h"
 #include "debug.h"
+#include "interrupt.h"
+#include "list.h"
+#include "print.h"
+#include "stdint.h"
 /* 自定义通用函数了类型，它将在很多线程函数中作为形参类型*/
 typedef void thread_func(void *);
 // 作为函数指针？
@@ -89,7 +90,7 @@ struct task_struct {
   /* all_list_tag 的作用是用于线程队列 thread_all_list 中的结点 */
   struct list_elem all_list_tag; // 用于线程队列的结点
   /* */
-  uint32_t* pgdir; // 进程自己页表的虚拟地址
+  uint32_t *pgdir;      // 进程自己页表的虚拟地址
   uint32_t stack_magic; // 栈的边界标记，用于检测栈是否溢出
 };
 
@@ -104,5 +105,7 @@ struct task_struct {
 // void init_thread(struct task_struct *pthread, char *name, int prio);
 struct task_struct *thread_start(char *name, int prio, thread_func function,
                                  void *func_arg);
-
-#endif 
+struct task_struct *running_thread();
+void schedule(void);
+void thread_init(void);
+#endif

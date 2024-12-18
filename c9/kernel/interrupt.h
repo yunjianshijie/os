@@ -21,4 +21,5 @@ enum intr_status intr_set_status(enum intr_status status);
 /* 获取当前中断状态 */
 enum intr_status intr_get_status();
 
+void register_headler(uint8_t vector_no, intr_handler function);
 #endif

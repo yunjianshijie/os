@@ -5,6 +5,7 @@
 #include "memory.h"
 #include "thread.h"
 void k_thread_a(void *);
+void k_thread_b(void *);
 int main(void) {
   put_str("I am kernel\n");
   init_all();
@@ -14,10 +15,13 @@ int main(void) {
   // put_int((uint32_t)addr);
 
   thread_start("k_thread_a", 31, k_thread_a, "argA1");
-
+  thread_start("k_thread_b", 8, k_thread_b, "argB2");
   //put_str("\n");
   //ASSERT(1 == 2); // 测试断言
-  while(1)
+  intr_enable(); // 打开中断，使时钟中断起作用
+  while(1){
+    put_str("main \n");
+  }
     ;
   //asm volatile("sti"); // 为演示中断处理，在此临时开中断
   return 0;
@@ -26,6 +30,13 @@ int main(void) {
 void k_thread_a(void * arg){
   char *para = arg;
   while(1){
+    put_str(para);
+  }
+  return;
+}
+void k_thread_b(void *arg) {
+  char *para = arg;
+  while (1) {
     put_str(para);
   }
   return;

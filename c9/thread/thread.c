@@ -113,3 +113,41 @@ static void make_main_thread(void) {
   ASSERT(!elem_find(&thread_all_list, &main_thread->general_tag));
   list_append(&thread_all_list, &main_thread->all_list_tag);
 }
+
+/* 实现调度器*/
+void schedule(void) {
+  ASSERT(intr_get_status() == INTR_OFF);
+  //要当前的中断关闭
+  struct task_struct * cur =running_thread(); //当前运行的线程pcb
+  if(cur->status == TASK_RUNNING){
+      // 如果此线程只是cpu时间片到了，就把它加入就绪队尾
+      ASSERT(!elem_find(&thread_ready_list, &cur->general_tag)); //如果链表上有这个就有问题
+      list_append(&thread_ready_list, &cur->general_tag); // 加入就绪队列
+      cur->ticks = cur->priority; //重置时间片
+      //重新将当前线程的ticks 再重置为其priority
+      cur->status = TASK_READY; //重新设置为就绪状态
+  }else{
+    /* 若此线程需要某事件发生后才能继续上 cpu 运行，
+ 不需要将其加入队列，因为当前线程不在就绪队列中*/
+  }
+
+  ASSERT(!list_empty(&thread_ready_list));
+  // 确保就绪队列不为空
+  /* 将thread_ready_list 队列中的第一个就绪线程弹出
+  准备将其调度到cpu上*/
+  thread_tag = list_pop(&thread_ready_list); // 用于保存队列中的线程结点
+  struct task_struct *next = elem2entry(struct task_struct,general_tag, thread_tag);
+  next ->status = TASK_RUNNING; // 设置为运行状态
+  switch_to(cur, next); // 切换到下一个线程
+}
+
+/* 初始化线程环境*/
+void thread_init(void) {
+  put_str("thread_init start\n");
+  list_init(&thread_ready_list);
+  list_init(&thread_all_list);
+  /* 将当前main函数创建为线程*/
+  make_main_thread(); 
+  put_str("thread_init done\n");
+}
+

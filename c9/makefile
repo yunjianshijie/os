@@ -20,8 +20,8 @@ IMG = /home/yunjian/os/HD60.img
 KERNEL_OBJS = $(BUILD_DIR)/main.o $(BUILD_DIR)/init.o $(BUILD_DIR)/interrupt.o \
               $(BUILD_DIR)/print.o $(BUILD_DIR)/kernel.o $(BUILD_DIR)/timer.o   \
               $(BUILD_DIR)/debug.o $(BUILD_DIR)/memory.o $(BUILD_DIR)/bitmap.o \
-			  $(BUILD_DIR)/string.o  $(BUILD_DIR)/thread.o $(BUILD_DIR)/list.o
-
+			  $(BUILD_DIR)/string.o  $(BUILD_DIR)/thread.o $(BUILD_DIR)/list.o \
+			  $(BUILD_DIR)/switch.o 
 # 默认目标
 all: $(IMG)
 
@@ -39,7 +39,7 @@ $(BUILD_DIR)/%.o: $(KERNEL_DIR)/%.c
 $(BUILD_DIR)/%.o: $(DEVICE_DIR)/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(BUILD_DIR)/%.o: $(LIB_DIR)/kernel/%.S
+$(BUILD_DIR)/%.o: $(LIB_DIR)/kernel/%.asm
 	$(AS) $(ASFLAGS) -o $@ $<
 
 $(BUILD_DIR)/%.o: $(LIB_DIR)/%.c
@@ -54,7 +54,10 @@ $(BUILD_DIR)/list.o: $(LIB_DIR)/kernel/list.c
 $(BUILD_DIR)/thread.o: $(THREAD_DIR)/thread.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(BUILD_DIR)/kernel.o: $(KERNEL_DIR)/kernel.S
+$(BUILD_DIR)/switch.o: $(THREAD_DIR)/switch.asm
+	$(AS) $(ASFLAGS) -o $@ $<
+
+$(BUILD_DIR)/kernel.o: $(KERNEL_DIR)/kernel.asm
 	$(AS) $(ASFLAGS) -o $@ $<
 
 
