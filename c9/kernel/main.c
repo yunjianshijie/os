@@ -14,14 +14,14 @@ int main(void) {
   // put_str("\n get_kernel_page start vaddr is ");
   // put_int((uint32_t)addr);
 
-  thread_start("k_thread_a", 31, k_thread_a, "argA1");
-  thread_start("k_thread_b", 8, k_thread_b, "argB2");
+  // thread_start("k_thread_a", 31, k_thread_a, "argA1");
+  // thread_start("k_thread_b", 8, k_thread_b, "argB2");
   //put_str("\n");
   //ASSERT(1 == 2); // 测试断言
   //intr_enable(); // 打开中断，使时钟中断起作用
-  while(1){
-    put_str("main \n");
-  }
+  // while(1){
+  //   put_str("main ");
+  // }
     ;
   //asm volatile("sti"); // 为演示中断处理，在此临时开中断
   return 0;

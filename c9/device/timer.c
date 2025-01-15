@@ -40,6 +40,7 @@ static void intr_timer_handler(void) {
     struct task_struct *cur_thread = running_thread(); // cur 当前线程 返回线程pcb
     /* 时钟的中断处理函数*/
     ASSERT(cur_thread->stack_magic == 0x19870916); // 查看是否出栈
+    cur_thread->elapsed_ticks++; // 线程运行的时间片+1
     ticks++; // ticks 是内核自中断开启以来总共的嘀嗒数+1
     if(cur_thread->ticks == 0){
         schedule(); // 调度  在thread.c中

@@ -18,7 +18,7 @@ extern void switch_to(struct task_struct *cur, struct task_struct *next);
 struct task_struct *running_thread() {
   uint32_t esp;
   asm volatile("mov %%esp, %0" : "=g"(esp));
-  // 取esp 整数部分，即pcb起始地址
+  // 取 esp 整数部分，即 pcb 起始地址
   return (struct task_struct *)(esp & 0xfffff000); // 前15位
 }
 
@@ -130,8 +130,8 @@ void schedule(void) {
     /* 若此线程需要某事件发生后才能继续上 cpu 运行，
  不需要将其加入队列，因为当前线程不在就绪队列中*/
   }
-
   ASSERT(!list_empty(&thread_ready_list));
+  thread_tag = NULL; //thread_tag 清空
   // 确保就绪队列不为空
   /* 将thread_ready_list 队列中的第一个就绪线程弹出
   准备将其调度到cpu上*/
