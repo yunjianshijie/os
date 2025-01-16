@@ -99,11 +99,12 @@ static void general_intr_handler(uint8_t vec_nr) {
   } put_str("\n!!!!!!! excetion message end !!!!!!!!\n");
      // 能进入中断处理程序就表示已经处在关中断情况下
      // 不会出现调度进程的情况。故下面的死循环不会再被中断
-     while (1);
+   
   // 其他中断号
   put_str("int vector: 0x");
   put_int(vec_nr);
-  put_char('\n');
+  put_char('\n'); 
+  while (1);
 }
 /* 在中断处理程序数组第ver_no个元素
 注册安装中断处理函数function */
@@ -120,9 +121,9 @@ static void exception_init(void) {
   for (i = 0; i < IDT_DESC_CNT; i++) {
     /* idt_table 数组中的函数是在进入中断后根据中断向量号调用的
      *   见kernel/kernel.S的call [idt_table + %1*4]*/
-    idt_table[i] = general_intr_handler;
+    idt_table[i] = register_headler;
     // 先默认为general_intr_handler
-    // 以后会由register_handler来注册具体处理函数
+    // 以后会由register_headler来注册具体处理函数
     intr_name[i] = "unknown"; // 先统一赋值为unknown
   }
   intr_name[0] = "#DE Divide Error";

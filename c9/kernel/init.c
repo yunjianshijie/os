@@ -7,8 +7,7 @@
 void init_all(void){
     put_str("init_all\n");
     idt_init(); // 初始化中断
-    timer_init(); // 初始化时钟PIT
     mem_init(); // 初始化内存管理
-    thread_init(); // 初始化线程管理
-    
+    //thread_init(); // 初始化线程管理
+    //timer_init(); // 初始化时钟PIT
 }
