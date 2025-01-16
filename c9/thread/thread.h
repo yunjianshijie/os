@@ -103,6 +103,8 @@ struct task_struct {
 //     return 0;
 // } // 创建线程
 // void init_thread(struct task_struct *pthread, char *name, int prio);
+
+/* 创建一优先级为prio的线程,线程名为name,线程所执行的函数是function(func_arg) */
 struct task_struct *thread_start(char *name, int prio, thread_func function,
                                  void *func_arg);
 struct task_struct *running_thread();
