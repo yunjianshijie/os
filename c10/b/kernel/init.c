@@ -9,5 +9,6 @@ void init_all(void){
     idt_init(); // 初始化中断
     mem_init(); // 初始化内存管理
     thread_init(); // 初始化线程管理
-    timer_init(); // 初始化时钟PIT
+    timer_init();
+    ; // 初始化时钟PIT
 }
