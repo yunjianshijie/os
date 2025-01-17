@@ -9,6 +9,7 @@ void k_thread_b(void *);
 int main(void) {
   put_str("I am kernel\n");
   init_all();
+  ;
 
   // void * addr = get_kernel_pages(3);
   // put_str("\n get_kernel_page start vaddr is ");
