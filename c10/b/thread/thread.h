@@ -11,12 +11,12 @@ typedef void thread_func(void *);
 
 /* 进程或线程状态*/
 enum task_status {
-  TASK_RUNNING,
-  TASK_READY,
-  TASK_BLOCKED,
-  TASK_WAITING,
-  TASK_HANGING,
-  TASK_DEAD
+  TASK_RUNNING, // 正在运行或正在准备运行
+  TASK_READY,   // 在就绪队列
+  TASK_BLOCKED, // 被阻塞
+  TASK_WAITING, // 等待信号、条件变量或其他同步机制
+  TASK_HANGING, // 死锁、无限循环
+  TASK_DEAD     // 进程已经退出，资源正在被回收
 };
 
 /*********** 中断栈 intr_stack ***********
@@ -108,6 +108,10 @@ struct task_struct {
 struct task_struct *thread_start(char *name, int prio, thread_func function,
                                  void *func_arg);
 struct task_struct *running_thread();
+/* 调度器*/
 void schedule(void);
 void thread_init(void);
+/* 当前线程将自己阻塞，标志其状态为 stat. */
+void thread_block(enum task_status);
+void thread_unblock(struct task_struct *pthread);
 #endif
