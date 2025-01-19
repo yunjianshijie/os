@@ -20,14 +20,14 @@ int main(void) {
   //ASSERT(1 == 2); // 测试断言
   //intr_enable(); // 打开中断，使时钟中断起作用
   while(1){
-    intr_disable();
-    put_str("main ");
-    intr_enable();
+    // intr_disable();
+    // put_str("main ");
+    // intr_enable();
   }
   //   ;
   //asm volatile("sti"); // 为演示中断处理，在此临时开中断
 //  while(1)
-    ;
+   // ;
   return 0;
 }
 
