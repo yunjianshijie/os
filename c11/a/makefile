@@ -4,7 +4,7 @@ CC = gcc
 LD = ld
 DD = dd
 ASFLAGS = -f elf
-CFLAGS = -m32  -I lib/kernel/ -I lib/ -I kernel/ -I device/ -I thread/ -fno-builtin -fno-stack-protector 
+CFLAGS = -m32  -I lib/kernel/ -I lib/ -I kernel/ -I device/ -I thread/ -I/userprog -fno-builtin -fno-stack-protector 
 LDFLAGS = -m elf_i386 -Ttext 0xc0001500 -e main
 
 # 文件路径
@@ -14,6 +14,7 @@ DEVICE_DIR = device
 KERNEL_DIR = kernel
 THREAD_DIR = thread
 LIB_DIR = lib
+USERPROG_DIR = userprog
 IMG = /home/yunjian/os/HD60.img
 
 # 目标文件
@@ -22,7 +23,7 @@ KERNEL_OBJS = $(BUILD_DIR)/main.o $(BUILD_DIR)/init.o $(BUILD_DIR)/interrupt.o \
               $(BUILD_DIR)/debug.o $(BUILD_DIR)/memory.o $(BUILD_DIR)/bitmap.o \
 			  $(BUILD_DIR)/string.o $(BUILD_DIR)/thread.o $(BUILD_DIR)/list.o \
 			  $(BUILD_DIR)/switch.o $(BUILD_DIR)/sync.o  $(BUILD_DIR)/console.o \
-			  $(BUILD_DIR)/keyboard.o $(BUILD_DIR)/ioqueue.o
+			  $(BUILD_DIR)/keyboard.o $(BUILD_DIR)/ioqueue.o $(BUILD_DIR)/tss.o
 # 默认目标
 all: $(IMG)
 
@@ -65,6 +66,9 @@ $(BUILD_DIR)/keyboard.o: $(DEVICE_DIR)/keyboard.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(BUILD_DIR)/ioqueue.o: $(DEVICE_DIR)/ioqueue.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(BUILD_DIR)/tss.o: $(USERPROG_DIR)/tss.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(BUILD_DIR)/switch.o: $(THREAD_DIR)/switch.asm
