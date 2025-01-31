@@ -1,12 +1,9 @@
 #ifndef _THREAD_THREAD_H
 #define _THREAD_THREAD_H
-#include "memory.h"
-#include "debug.h"
-#include "interrupt.h"
 #include "list.h"
-#include "print.h"
+#include "memory.h"
 #include "stdint.h"
-#include "bitmap.h"
+#include "process.h"
 /* 自定义通用函数了类型，它将在很多线程函数中作为形参类型*/
 typedef void thread_func(void *);
 // 作为函数指针？
@@ -115,6 +112,8 @@ struct task_struct {
 // void init_thread(struct task_struct *pthread, char *name, int prio);
 
 /* 创建一优先级为prio的线程,线程名为name,线程所执行的函数是function(func_arg) */
+extern struct list thread_ready_list;
+extern struct list thread_all_list;
 struct task_struct *thread_start(char *name, int prio, thread_func function,
                                  void *func_arg);
 struct task_struct *running_thread();
@@ -122,4 +121,7 @@ void schedule(void);
 void thread_init(void);
 void thread_block(enum task_status stat);
 void thread_unblock(struct task_struct *pthread);
+void thread_create(struct task_struct *pthread, thread_func function,
+                   void *func_arg);
+void init_thread(struct task_struct *pthread, char *name, int prio);
 #endif

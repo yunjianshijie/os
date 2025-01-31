@@ -90,7 +90,7 @@
 #define EFLAGS_IF_1 (1 << 9)    // 中断标志位 开中断
 #define EFLAGS_IF_0 0           // 中断标志位关中断
 // IOPL3,用于测试用户程序在非系统调用下进行IO操作
-#define EFLAGS_IOPL_3 (3 << 12) // IO权限位，0为内核权限，3为用户权限
+#define EFLAGS_IOPL_0 (3 << 12) // IO权限位，0为内核权限，3为用户权限
 //
 #define NULL (void *)0
 #define DIV_ROUND_UP(X,STEP) ((X) + (STEP) - 1) / (STEP)
@@ -108,4 +108,5 @@ struct gdt_desc {
   uint8_t base_high_byte;       // 段基址的高8位
 };
 
+#define USER_STACK3_VADDR (0xc0000000 - 0x1000)
 #endif

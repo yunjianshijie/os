@@ -6,6 +6,7 @@
 #include "stdint.h"
 #include "sync.h"
 #include "thread.h"
+#include "stdint.h"
 void console_init(void);
 
 void console_acquire(void);

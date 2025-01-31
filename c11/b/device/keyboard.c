@@ -1,6 +1,10 @@
 #include "keyboard.h"
+#include "global.h"
+#include "interrupt.h"
+#include "io.h"
 #include "ioqueue.h"
-#include <stdbool.h>
+#include "print.h"
+
 /* 用转义字符定义部分控制字符 */
 #define esc '\033' // 八进制表示字符，也可以用十六进制'\x1b'
 #define backspace '\b'

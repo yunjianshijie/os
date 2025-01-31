@@ -1,12 +1,12 @@
 #include "thread.h"
-#include "debug.h"
 #include "global.h"
-#include "interrupt.h"
 #include "memory.h"
-#include "print.h"
 #include "stdint.h"
 #include "string.h"
-
+#include "debug.h"
+#include "interrupt.h"
+#include "print.h"
+#include "process.h"
 
 struct task_struct *main_thread; // 主线程pcb(进程控制块)
 struct list thread_ready_list; // 就绪队列,每创建一个线程就将其加到此队列,就绪队列中的线程可以直接上处理器
@@ -138,6 +138,8 @@ void schedule() {
   struct task_struct *next =
       elem2entry(struct task_struct, general_tag, thread_tag);
   next->status = TASK_RUNNING;
+  /* 激活任务页表等 */
+  process_activate(next);
   switch_to(cur, next);
 }
 

@@ -1,5 +1,6 @@
 #include "ioqueue.h"
 #include "debug.h"
+#include "global.h"
 #include "interrupt.h"
 
 /* 初始化io队列ioq */

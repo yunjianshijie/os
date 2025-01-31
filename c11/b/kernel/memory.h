@@ -1,9 +1,8 @@
 #ifndef _KERNEL_MEMORY_H
 #define _KERNEL_MEMORY_H
-
 #include "bitmap.h"
 #include "stdint.h"
-#include "sync.h"
+
 // #include "thread.h"
 /*内存池标记用于判断用那个内存池*/
 /* 虚拟地址池用于管理虚拟地址管理*/
@@ -35,9 +34,10 @@ void mem_init(void);
 void *get_kernel_pages(uint32_t pg_cnt);
 
 void *get_user_pages(uint32_t pg_cnt);
-
+void *get_a_page(enum pool_flags pf, uint32_t vaddr);
+uint32_t addr_v2p(uint32_t vaddr);
 // 在pf表示的虚拟内存池中申请pg_cnt个虚拟页
-// static void *vaddr_get(enum pool_flags pf, uint32_t pg_cnt); 
+// static void *vaddr_get(enum pool_flags pf, uint32_t pg_cnt);
 // // 得到虚拟地址vaddr对应的pte指针
 // uint32_t *pte_ptr(uint32_t vaddr);
 // // 在m_pool指向的物理内存池中分配1个物理页，成功则返回页框的物理地址，失败则返回NULL

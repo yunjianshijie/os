@@ -23,7 +23,8 @@ KERNEL_OBJS = $(BUILD_DIR)/main.o $(BUILD_DIR)/init.o $(BUILD_DIR)/interrupt.o \
               $(BUILD_DIR)/debug.o $(BUILD_DIR)/memory.o $(BUILD_DIR)/bitmap.o \
 			  $(BUILD_DIR)/string.o $(BUILD_DIR)/thread.o $(BUILD_DIR)/list.o \
 			  $(BUILD_DIR)/switch.o $(BUILD_DIR)/sync.o  $(BUILD_DIR)/console.o \
-			  $(BUILD_DIR)/keyboard.o $(BUILD_DIR)/ioqueue.o $(BUILD_DIR)/tss.o
+			  $(BUILD_DIR)/keyboard.o $(BUILD_DIR)/ioqueue.o $(BUILD_DIR)/tss.o \
+			  $(BUILD_DIR)/process.o 
 # 默认目标
 all: $(IMG)
 
@@ -69,6 +70,9 @@ $(BUILD_DIR)/ioqueue.o: $(DEVICE_DIR)/ioqueue.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(BUILD_DIR)/tss.o: $(USERPROG_DIR)/tss.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(BUILD_DIR)/process.o: $(USERPROG_DIR)/process.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(BUILD_DIR)/switch.o: $(THREAD_DIR)/switch.asm

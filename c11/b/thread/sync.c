@@ -1,6 +1,8 @@
 // #include "thread.h"
 #include "sync.h"
 #include "list.h"
+#include "interrupt.h"
+#include "debug.h"
 /* 初始化信号量*/
 void sema_init(struct semaphore *psema, uint8_t value) {
   psema->value = value;       // 为信号量赋初值
