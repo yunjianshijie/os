@@ -7,13 +7,18 @@
 #include "console.h"
 #include "keyboard.h"
 #include "tss.h"
-void init_all(void){
+#include "../userprog/syscall-init.h"
+#include "syscall.h"
+/*负责初始化所有模块 */
+void init_all()
+{
     put_str("init_all\n");
-    idt_init(); // 初始化中断
-    mem_init(); // 初始化内存管理
-    thread_init(); // 初始化线程管理
-    timer_init(); // 初始化时钟PIT
-    console_init(); // 初始化控制台，最好放在开中断之前
-    keyboard_init(); // 初始化键盘
-    tss_init(); // 初始化tss
+    idt_init();    // 初始化中断
+    mem_init();    // 初始化内存管理系统
+    thread_init(); // 初始化线程相关结构
+    timer_init();
+    console_init();
+    keyboard_init();
+    tss_init();
+    syscall_init();
 }
