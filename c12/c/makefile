@@ -46,6 +46,9 @@ $(BUILD_DIR)/%.o: $(DEVICE_DIR)/%.c
 $(BUILD_DIR)/%.o: $(LIB_DIR)/kernel/%.asm
 	$(AS) $(ASFLAGS) -o $@ $<
 
+# $(BUILD_DIR)/%.o: $(LIB_DIR)/kernel/%.S
+# 	$(AS) $(ASFLAGS) -o $@ $<
+
 
 $(BUILD_DIR)/%.o: $(LIB_DIR)/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<

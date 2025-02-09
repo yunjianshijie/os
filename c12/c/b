@@ -1,0 +1,2 @@
+$(BUILD_DIR)/%.o: $(LIB_DIR)/kernel/%.asm
+	$(AS) $(ASFLAGS) -o $@ $<
