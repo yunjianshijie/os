@@ -71,7 +71,7 @@
 #define GDT_ATTR_HIGH                                                          \
   ((DESC_G_4K << 7) | (DESC_D_32 << 6) | (DESC_L << 5) | (DESC_AVL << 4))
 
-#define GDT_CODE_ATTR_LOW_DPL0                                                 \
+#define GDT_CODE_ATTR_LOW_DPL3                                                 \
   ((DESC_P << 7) + (DESC_DPL_3 << 5) + (DESC_S_CODE << 4) + DESC_TYPE_CODE)
 #define GDT_DATA_ATTR_LOW_DPL3                                                 \
   ((DESC_P << 7) + (DESC_DPL_3 << 5) + (DESC_S_DATA << 4) + DESC_TYPE_DATA)

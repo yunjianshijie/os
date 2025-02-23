@@ -5,6 +5,7 @@
 #include "list.h"
 #include "print.h"
 #include "stdint.h"
+#include "memory.h"
 /* 自定义通用函数了类型，它将在很多线程函数中作为形参类型*/
 typedef void thread_func(void *);
 // 作为函数指针？
@@ -91,6 +92,7 @@ struct task_struct {
   struct list_elem all_list_tag; // 用于线程队列的结点
   /* */
   uint32_t *pgdir;      // 进程自己页表的虚拟地址
+  struct virtual_addr userprog_vaddr; // 用户进程的虚拟地址空间
   uint32_t stack_magic; // 栈的边界标记，用于检测栈是否溢出
 };
 

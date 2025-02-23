@@ -3,6 +3,7 @@
 #include "stdint.h"
 #include "sync.h"
 #include "thread.h"
+#include <stdbool.h>
 #define bufsize 64
 /* 环形队列*/
 struct ioqueue {
@@ -26,7 +27,7 @@ static int32_t next_pos(int pos);
 // 判断io队列是否已满
 bool ioq_full(struct ioqueue *ioq);
 /* 判断队列是否已空 */
-static bool ioq_empty(struct ioqueue *ioq);
+bool ioq_empty(struct ioqueue *ioq);
 /* 使当前生产者或者消费者在此缓冲区上等待*/
 static void ioq_wait(struct task_struct **waiter);
 /* 唤醒waiter */

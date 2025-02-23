@@ -5,6 +5,7 @@
 //#include "memory.h"
 #include "thread.h"
 #include "console.h"
+#include "interrupt.h"
 
 #include "process.h"
 /* 临时为测试添加 */
@@ -27,10 +28,9 @@ int main(void) {
   process_execute(u_prog_b, "user_prog_b");
   intr_enable(); // 打开中断,使时钟中断起作用
 
-  while(1){
-    //console_put_str("Main ");
-  }
- 
+  while(1)
+    ;
+
 //  while(1) ;
   return 0;
 }
@@ -39,7 +39,7 @@ void k_thread_a(void * arg){
   char *para = arg;
   while (1) {
     console_put_str("v_a:0x");
-    console_put_int(tast_var_a);
+    //console_put_int(tast_var_a);
   }
   return;
 }
@@ -47,7 +47,7 @@ void k_thread_b(void *arg) {
   char *para = arg;
   while(1){
     console_put_str("v_b:0x");
-    console_put_int(tast_var_b);
+    //console_put_int(tast_var_b);
   }
   return;
   

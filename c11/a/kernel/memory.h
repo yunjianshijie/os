@@ -4,6 +4,7 @@
 /*内存池标记用于判断用那个内存池*/
 #include "bitmap.h"
 #include "stdint.h"
+#include "sync.h"
 /* 虚拟地址池用于管理虚拟地址管理*/
 
 struct virtual_addr {

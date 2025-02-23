@@ -74,8 +74,8 @@
 //    */
 //   // uint32_t *pte =(uint32_t *)(0xfffff000 + PTE_IDX(vaddr) * 4 + (vaddr &
 //   // 0xffc00000) >>10);
-//   uint32_t *pte = (uint32_t *)(0xffc00000 + ((vaddr & 0xffc00000) >> 10) +PTE_IDX(vaddr) * 4);
-//   return pte;
+//   uint32_t *pte = (uint32_t *)(0xffc00000 + ((vaddr & 0xffc00000) >> 10)
+//   +PTE_IDX(vaddr) * 4); return pte;
 // }
 
 // /* 得到虚拟地址vaddr对应的pde指针*/
@@ -97,9 +97,7 @@
 //   uint32_t page_phyaddr = m_pool->phy_addr_start + bit_idx * PG_SIZE;
 //   return (void *)page_phyaddr;
 // }
-  
 
-  
 // // vaddr-> 虚拟地址， page_phyaddr-> 页框物理地址
 // static void page_table_add(void *_vaddr, void *_page_phyaddr) {
 
@@ -181,7 +179,8 @@
 //     // put_int((uint32_t)page_phyaddr);
 //     if (page_phyaddr == NULL) // 判断是否申请成功
 //     {
-//       // 失败时要将曾经已申请的虚拟地址和物理地址的映射关系全部撤销，在将来完成内存回收时再补充
+//       //
+//       失败时要将曾经已申请的虚拟地址和物理地址的映射关系全部撤销，在将来完成内存回收时再补充
 //       return NULL;
 //     }
 //     page_table_add((void *)vaddr, page_phyaddr); // 建立映射关系
@@ -205,7 +204,8 @@
 // /* 初始化内存池*/
 // static void mem_pool_init(uint32_t all_mem) {
 //   put_str(" mem_pool_init start\n");
-//   uint32_t page_table_size = PG_SIZE * 256; // 页目录表大小 一个页目录0x100000
+//   uint32_t page_table_size = PG_SIZE * 256; // 页目录表大小
+//   一个页目录0x100000
 
 //   // 页表示大小=1页的页目录表 + 第0 和 第768个页目录指向同一个页表+
 //   // 第 789~1022 个页目录项共指向254个页表，共256个页框
@@ -308,20 +308,20 @@ struct pool {
   struct bitmap pool_bitmap; // 本内存池用到的位图结构,用于管理物理内存
   uint32_t phy_addr_start;   // 本内存池所管理物理内存的起始地址
   uint32_t pool_size;        // 本内存池字节容量
+  struct lock lock;
 };
 
-struct pool kernel_pool,
-    user_pool; // 为kernel与user分别建立物理内存池，让用户进程只能从user内存池获得新的内存空间，
-               // 以免申请完所有可用空间,内核就不能申请空间了
+struct pool kernel_pool, user_pool;
+// 为kernel与user分别建立物理内存池，让用户进程只能从user内存池获得新的内存空间，
+// 以免申请完所有可用空间,内核就不能申请空间了
 struct virtual_addr kernel_vaddr; // 用于管理内核虚拟地址空间
 
 // 初始化内核物理内存池与用户物理内存池
 static void mem_pool_init(uint32_t all_mem) {
   put_str("   mem_pool_init start\n");
-  uint32_t page_table_size =
-      PG_SIZE *
-      256; // 页表大小= 1页的页目录表+第0和第768个页目录项指向同一个页表+
-           // 第769~1022个页目录项共指向254个页表,共256个页表
+  uint32_t page_table_size = PG_SIZE * 256;
+  // 页表大小= 1页的页目录表+第0和第768个页目录项指向同一个页表+
+  // 第769~1022个页目录项共指向254个页表,共256个页表
   uint32_t used_mem =
       page_table_size + 0x100000; // 已使用内存 = 1MB + 256个页表
   uint32_t free_mem = all_mem - used_mem;
@@ -348,7 +348,7 @@ static void mem_pool_init(uint32_t all_mem) {
                      PG_SIZE; // User Pool start,用户使用的物理内存池的起始地址
 
   kernel_pool.phy_addr_start = kp_start; // 赋值给内核使用的物理内存池的起始地址
-  user_pool.phy_addr_start = up_start; // 赋值给用户使用的物理内存池的起始地址
+  user_pool.phy_addr_start = up_start;   // 赋值给用户使用的物理内存池的起始地址
 
   kernel_pool.pool_size =
       kernel_free_pages * PG_SIZE; // 赋值给内核使用的物理内存池的总大小
@@ -416,7 +416,7 @@ static void mem_pool_init(uint32_t all_mem) {
 static void *vaddr_get(enum pool_flags pf, uint32_t pg_cnt) {
   int vaddr_start = 0, bit_idx_start = -1;
   uint32_t cnt = 0;
-  if (pf == PF_KERNEL) {
+  if (pf == PF_KERNEL) { // 内核内存池
     bit_idx_start = bitmap_scan(&kernel_vaddr.vaddr_bitmap, pg_cnt);
     if (bit_idx_start == -1) {
       return NULL;
@@ -427,6 +427,19 @@ static void *vaddr_get(enum pool_flags pf, uint32_t pg_cnt) {
     vaddr_start = kernel_vaddr.vaddr_start + bit_idx_start * PG_SIZE;
   } else {
     // 用户内存池,将来实现用户进程再补充
+    struct task_struct *cur = running_thread();
+    bit_idx_start = bitmap_scan(&cur->userprog_vaddr.vaddr_bitmap, pg_cnt);
+    if (bit_idx_start == -1) {
+      return NULL;
+    }
+    while (cnt < pg_cnt) {
+      bitmap_set(&cur->userprog_vaddr.vaddr_bitmap, bit_idx_start + cnt++, 1);
+    }
+    vaddr_start = cur->userprog_vaddr.vaddr_start + bit_idx_start * PG_SIZE;
+    /*  (0xc0000000 - PG_SIZE)作为用户 3 级栈已经在 start_process 被分配 
+    ASSERT((uint32_t)vaddr_start < (0xc0000000 - PG_SIZE));
+    */
+   return (void *)(vaddr_start);
   }
   return (void *)vaddr_start;
 }

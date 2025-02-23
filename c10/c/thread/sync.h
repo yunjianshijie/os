@@ -18,11 +18,17 @@ struct lock{
 };
 //谁成功申请了锁，谁就是锁的持有者
 
-void lock_init(struct lock *plock);
-/* 获取锁plock */
-void lock_acquire(struct lock *plock);
-/* 释放锁plock */
-void lock_release(struct lock *plock);
+// void lock_init(struct lock *plock);
+// /* 获取锁plock */
+// void lock_acquire(struct lock *plock);
+// /* 释放锁plock */
+// void lock_release(struct lock *plock);
 
+// void sema_init(struct semaphore *psema, uint8_t value);
 void sema_init(struct semaphore *psema, uint8_t value);
+void lock_init(struct lock *lock);
+void sema_down(struct semaphore *psema);
+void sema_up(struct semaphore *psema);
+void lock_acquire(struct lock *plock);
+void lock_release(struct lock *plock);
 #endif

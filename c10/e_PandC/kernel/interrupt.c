@@ -50,6 +50,27 @@ char *intr_name[IDT_DESC_CNT]; // 存储中断/异常的名字
 /* 初始化可编程中断控制器8259A */
 static void pic_init(void) {
 
+  // /* 初始化主片 */
+  // outb(PIC_M_CTRL, 0x11); // ICW1: 边沿触发,级联8259, 需要ICW4.
+  // outb(PIC_M_DATA,
+  //      0x20); // ICW2: 起始中断向量号为0x20,也就是IR[0-7] 为 0x20 ~ 0x27.
+  // outb(PIC_M_DATA, 0x04); // ICW3: IR2接从片.
+  // outb(PIC_M_DATA, 0x01); // ICW4: 8086模式, 正常EOI
+
+  // /* 初始化从片 */
+  // outb(PIC_S_CTRL, 0x11); // ICW1: 边沿触发,级联8259, 需要ICW4.
+  // outb(PIC_S_DATA,
+  //      0x28); // ICW2: 起始中断向量号为0x28,也就是IR[8-15] 为 0x28 ~ 0x2F.
+  // outb(PIC_S_DATA, 0x02); // ICW3: 设置从片连接到主片的IR2引脚
+  // outb(PIC_S_DATA, 0x01); // ICW4: 8086模式, 正常EOI
+
+  // /* 打开主片上IR0,也就是目前只接受时钟产生的中断 */
+  // outb(PIC_M_DATA, 0xfe);
+  // outb(PIC_S_DATA, 0xff);
+  // /*测试键盘，只打开键盘中断，其他全部关闭*/
+  // outb(PIC_M_DATA, 0xfc);
+  // outb(PIC_S_DATA, 0xff);
+  // put_str("   pic_init done\n");
   /* 初始化主片 */
   outb(PIC_M_CTRL, 0x11); // ICW1: 边沿触发,级联8259, 需要ICW4.
   outb(PIC_M_DATA,
@@ -65,11 +86,18 @@ static void pic_init(void) {
   outb(PIC_S_DATA, 0x01); // ICW4: 8086模式, 正常EOI
 
   /* 打开主片上IR0,也就是目前只接受时钟产生的中断 */
-  outb(PIC_M_DATA, 0xfe);
-  outb(PIC_S_DATA, 0xff);
-  /*测试键盘，只打开键盘中断，其他全部关闭*/
+  // outb(PIC_M_DATA, 0xfe);
+  // outb(PIC_S_DATA, 0xff);
+
+  /* 测试键盘,只打开键盘中断，其它全部关闭 */
+  // outb (PIC_M_DATA, 0xfd);
+  // //键盘中断在主片ir1引脚上，所以将这个引脚置0，就打开了 outb (PIC_S_DATA,
+  // 0xff);
+
+  /* 同时打开时钟中断和键盘中断 */
   outb(PIC_M_DATA, 0xfc);
   outb(PIC_S_DATA, 0xff);
+
   put_str("   pic_init done\n");
 }
 

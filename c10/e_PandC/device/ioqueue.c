@@ -1,5 +1,6 @@
 #include "ioqueue.h"
 #include "debug.h"
+#include "global.h"
 #include "interrupt.h"
 
 /* 初始化io队列ioq */
@@ -22,7 +23,7 @@ bool ioq_full(struct ioqueue *ioq) {
 }
 
 /* 判断队列是否已空 */
-static bool ioq_empty(struct ioqueue *ioq) {
+ bool ioq_empty(struct ioqueue *ioq) {
   ASSERT(intr_get_status() == INTR_OFF);
   return ioq->head == ioq->tail;
 }

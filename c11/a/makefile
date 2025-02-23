@@ -4,7 +4,7 @@ CC = gcc
 LD = ld
 DD = dd
 ASFLAGS = -f elf
-CFLAGS = -m32  -I lib/kernel/ -I lib/ -I kernel/ -I device/ -I thread/ -I/userprog -fno-builtin -fno-stack-protector 
+CFLAGS = -m32  -I lib/kernel/ -I lib/ -I kernel/ -I device/ -I thread/ -I userprog/ -fno-builtin -fno-stack-protector 
 LDFLAGS = -m elf_i386 -Ttext 0xc0001500 -e main
 
 # 文件路径
