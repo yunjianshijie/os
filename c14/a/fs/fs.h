@@ -1,6 +1,8 @@
 #ifndef __FS_FS_H
 #define __FS_FS_H
 
+#include "ide.h"
+
 #define MAX_FILES_PER_RART 4096
 // 每个分区所支持最大创建的文件数
 
@@ -16,5 +18,8 @@ enum file_types
     FT_DIRECTORY, // 目录
 };
 
-
+/*  格式化分区，也就是初始化分区的元信息，创建文件系统 */
+static void partition_format( struct partition *part);
+/* 在磁盘上搜索文件系统，若没有则格式化分区创建文件系统 */
+void filesys_init(void);
 #endif

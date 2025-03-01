@@ -8,7 +8,9 @@
 #include "syscall.h"
 #include "stdio.h"
 #include "memory.h"
-
+#include "fs.h"
+#include "dir.h"
+#include "file.h"
 void k_thread_a(void *);
 void k_thread_b(void *);
 void u_prog_a(void);
@@ -18,11 +20,12 @@ int main(void)
 {
    put_str("I am kernel\n");
    init_all();
-   intr_enable();
+   //intr_enable();
    process_execute(u_prog_a, "u_prog_a");
    process_execute(u_prog_b, "u_prog_b");
    thread_start("k_thread_a", 31, k_thread_a, "I am thread_a");
    thread_start("k_thread_b", 31, k_thread_b, "I am thread_b");
+   sys_open("/file1", O_CREAT);
    while (1)
       ;
    return 0;
